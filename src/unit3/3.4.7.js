@@ -449,4 +449,24 @@ console.log('++++', baz, baz instanceof Array);  // ++++ ['baz'] true
 console.log('++++', baz, baz instanceof Baz);    // ++++ ['baz'] false
 baz = baz.concat('bas');
 console.log('++++', baz, baz instanceof Baz);    // ++++ ['baz'] false
+});
+
+(() => {
+// 13、Symbol.split
+/**
+ * 表示：一个正则表达式方法，该方法在匹配正则表达式的索引位置拆分字符串。由String.prototype.split()方法使用。
+ * String.prototype.split()方法会使用以Symbol.split 为键的函数来对表示求值。
+ * 正则表达式的原型上默认有这个函数的定义，因此所有正则表达式实例默认是这个String方法的有效参数：
+ */
+ console.log('---', RegExp.prototype[Symbol.split]);
+//  --- ƒ [Symbol.split]() { [native code] }
+ console.log('+++', 'foobar'.split(/bar/));
+//  +++ (2) ['foo', '']
+
+/**
+ * 给这个方法传入非正则表达式值会导致该值被转换为RegExp对象。
+ * 重新定义Symbol.split 函数可以改变这种行为，从而让split() 方法使用非正则表达式实例。
+ * Symbol.split 函数接收一个参数，就是调用match()方法的字符串实例。返回值没有限制：
+ */
+
 })();
