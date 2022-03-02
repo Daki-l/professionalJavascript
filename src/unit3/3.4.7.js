@@ -468,5 +468,142 @@ console.log('++++', baz, baz instanceof Baz);    // ++++ ['baz'] false
  * 重新定义Symbol.split 函数可以改变这种行为，从而让split() 方法使用非正则表达式实例。
  * Symbol.split 函数接收一个参数，就是调用match()方法的字符串实例。返回值没有限制：
  */
+class FooSpliter {
+    static [Symbol.split](target) {
+        return target.split('foo')
+    }
+}
+console.log('---', 'barfoobaz'.split(FooSpliter));
+// --- (2) ['bar', 'baz']
 
-})();
+class StringSpliter {
+    constructor(str) {
+        this.str = str;
+    }
+    [Symbol.split](target) {
+        return target.split(this.str);
+    }
+}
+console.log('+++', 'barfoobaz'.split(new StringSpliter('foo')));
+// +++ (2) ['bar', 'baz']
+});
+
+(() => {
+// 14、Symbol.toPrimitive
+/**
+ * 表示：一个方法，该方法将对象转换为相应的原始值。由ToPrimitive抽象操作使用。
+ * 很多内置操作都会尝试强制将对象转换为原始值，包括字符串、数值和未指定的原始类型。
+ * 对于一个自定义对象实例，通过在这个实例的Symbol.toPrimitive 属性上定义一个函数可以改变默认行为。
+ * 根据提供给这个函数的参数(string、number或default)，也可以控制返回的原始值：
+ */
+class Foo {};
+let foo = new Foo();
+
+console.log('---', 3 + foo);
+// --- 3[object Object]
+console.log('---', 3 - foo);
+// --- NaN
+console.log('---', String(foo));
+// --- [object Object]
+
+class Bar {
+    constructor() {
+        this[Symbol.toPrimitive] = function(hint) {
+            switch (hint) {
+                case 'number':
+                    return 3;
+                case 'string':
+                    return 'string bar';
+                case 'default':
+                default:
+                    return 'default bar';
+            }
+        }
+    }
+}
+
+let bar = new Bar();
+
+console.log('+++', 3 + bar);
+// +++ 3default bar
+console.log('+++', 3 - bar);
+// +++ 0
+console.log('+++', String(bar));
+// +++ string bar
+
+/**
+ * ？？？ 如果定义一个类继承 Array 然后重新定义这个类的 toPrimitive 
+class Carr extends Array {
+    constructor() {}
+}
+ * 会报错
+ * Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new Carr
+ */
+});
+
+(() => {
+// 15、Symbol.toStringTag
+/**
+ * 表示：一个字符串，该字符串用于创建对象的默认字符串描述。由Object.prototype.toString() 使用。
+ * 通过toString()方法获取对象标识时，会检索Symbol.toStringTag 指定的实例标识符，默认"Object".
+ * 内置类型已经指定了这个值，单自定义实例还需要明确定义：
+ */
+let s = new Set();
+
+console.log('---', s);
+// --- Set(0) {size: 0}
+console.log('---', s.toString());
+// --- [object Set]
+console.log('---', s[Symbol.toStringTag]);
+// --- Set
+
+class Foo {}
+let foo = new Foo();
+
+console.log('+++', foo);
+// +++ Foo {}
+console.log('+++', foo.toString());
+// +++ [object Object]
+console.log('+++', foo[Symbol.toStringTag]);
+// +++ undefined
+
+class Bar {
+    constructor() {
+        this[Symbol.toStringTag] = 'Bar';
+    }
+}
+let bar = new Bar();
+console.log('---', bar);
+// --- Bar {Symbol(Symbol.toStringTag): 'Bar'}
+console.log('---', bar.toString());
+// --- [object Bar]
+console.log('---', bar[Symbol.toStringTag]);
+// --- Bar
+
+let sfn = Object.prototype.toString;
+console.log('bar type', sfn.call(bar));
+// bar type [object Bar]
+});
+
+(() => {
+// 16、Symbol.unscopables
+/**
+ * 表示：一个对象，该对象所有的以及继承的属性，都会从关联对象的with环境绑定中排除。
+ * 设置这个符号并让其映射对应属性的键值为true，就可以阻止该属性出现在with环境绑定中，如下例所示：
+ * 注：不推荐使用with，因此也不推荐使用Symbol.enscopables
+ */
+let o = { foo: 'foo' };
+with(o) {
+    console.log('---', foo);
+    // --- foo
+}
+
+// o[Symbol.unscopables] = {
+//     foo: true
+// }
+// with(o) {
+//     console.log('---', foo);
+//     // Uncaught ReferenceError: foo is not defined
+// }
+});
