@@ -11,7 +11,7 @@
  * 在使用同步迭代器切获迭代异步确定的值时，主线程会被阻塞，以等待异步操作完成。
  * 
  * 有了异步迭代器就可以解决这个问题
- * 异步迭代器在每次调用next()时会提供解决为{ value, done }对象的期约。这样，执行线程可以释放并在当前这步循环完成之前执行其他任务。
+ * 异步迭代器在每次调用next()时会提供解决为{ value, done }对象的Promise。这样，执行线程可以释放并在当前这步循环完成之前执行其他任务。
  */
 
 (() => {
@@ -45,9 +45,9 @@ function syncCount() {
 // // x----- 2
 
 /**
- * 已上例子可以运行主要是迭代器可以理解产生下一个值。假如你不想在确定下一个产生的值时阻塞主线程执行，也可以定义异步迭代器，让她产生期约包装的值。
+ * 已上例子可以运行主要是迭代器可以理解产生下一个值。假如你不想在确定下一个产生的值时阻塞主线程执行，也可以定义异步迭代器，让她产生Promise包装的值。
  * 为此要使用迭代器和生成器的异步版本。
- * ECMA2018为此定义了Symbol.asyncIterator,一边定义个调用输出期约的生成器函数。这一规范还为异步迭代器增加了for-await-of循环用于使用异步迭代器
+ * ECMA2018为此定义了Symbol.asyncIterator,一边定义个调用输出Promise的生成器函数。这一规范还为异步迭代器增加了for-await-of循环用于使用异步迭代器
  */
 
 // Emitter类中 包含同步迭代器、异步迭代器
@@ -127,8 +127,8 @@ function sysConut2() {
 
 /**
  * 概念：Symbol.asyncIterator符号不会改变生成器函数的行为或者消费生成器的方式。
- * 上面的例子中，生成器函数加上了 async修饰符成为异步函数，又加上了星号成为生成器函数。
- * Symbol.asyncIterator在这只是起一个提示的作用，告诉将来消费这个迭代器的外部结构如for-await-of循环，这个迭代器会返回期约对象的序列
+ * 上面的例子中，生成器函数加上了 async修饰符成为异步函数，又加上了星号*成为生成器函数。
+ * Symbol.asyncIterator在这只是起一个提示的作用，告诉将来消费这个迭代器的外部结构如for-await-of循环，这个迭代器会返回Promise对象的序列
  */
 
 });
@@ -136,13 +136,13 @@ function sysConut2() {
 // A.1.2 理解异步迭代器队列
 
 /**
- * 前面的例子是假象的，因为迭代器返回的期约都会立即解决，所以跟同步迭代器的区别很难看出来。
- * 想象下迭代器返回的期约会在不确定的时间解决，而且他们返回的顺序都是乱的。
+ * 前面的例子是假象的，因为迭代器返回的Promise都会立即解决，所以跟同步迭代器的区别很难看出来。
+ * 想象下迭代器返回的Promise会在不确定的时间解决，而且他们返回的顺序都是乱的。
  * 异步迭代器应该尽可能模拟同步迭代器，包括每次迭代时代码的按顺序执行。
  * 因此，异步迭代器会维护一个回调队列，以保障早期值得迭代器处理程序总是会在处理晚期之前完成，即使后面的值遭遇之前的值解决。
  */
 
-// 为了验证队列，下面的例子中的迭代器函一随机时长返回期约。异步迭代队列可以保障期约解决的顺序不会干扰迭代顺序。结果应该按照顺序打印一组整租（但间隔时间随机）
+// 为了验证队列，下面的例子中的迭代器函一随机时长返回Promise。异步迭代队列可以保障Promise解决的顺序不会干扰迭代顺序。结果应该按照顺序打印一组整租（但间隔时间随机）
 class Emitter {
     constructor(max) {
         this.max = max;
@@ -200,7 +200,7 @@ asyncCount();
 // A.1.3 处理异步迭代器的 reject()
 
 /**
- * 因为异步迭代器使用期约来包装返回值，所以必须考虑某个期约被拒绝的情况。由于异步迭代会按顺序完成，而在循环中跳过被拒绝的期约是不合理的。因此，被拒绝的期约会强制退出迭代器
+ * 因为异步迭代器使用Promise来包装返回值，所以必须考虑某个Promise被拒绝的情况。由于异步迭代会按顺序完成，而在循环中跳过被拒绝的Promise是不合理的。因此，被拒绝的Promise会强制退出迭代器
  */
 
 class Emitter {
@@ -241,9 +241,9 @@ asyncCount();
 // A.1.4 使用next() 手动迭代
 
 /**
- * for-await-of提供了两个有用的特性。一：利用异步迭代器队列保证按顺序执行、二：隐藏异步迭代器的期约。但是使用者循环会隐藏很多底层的行为。
+ * for-await-of提供了两个有用的特性。一：利用异步迭代器队列保证按顺序执行、二：隐藏异步迭代器的Promise。但是使用者循环会隐藏很多底层的行为。
  * 因为异步迭代器仍遵守迭代器协议，所以可以使用next()逐个遍历异步可迭代对象。
- * next()返回的值包含一个期约，改期约可解决为{ value, done }这样的迭代结果。这意味着必须使用期约API获取方法，同时也意味着可以不使用异步迭代器队列。
+ * next()返回的值包含一个Promise，改Promise可解决为{ value, done }这样的迭代结果。这意味着必须使用PromiseAPI获取方法，同时也意味着可以不使用异步迭代器队列。
  */
 class Emitter {
     constructor(max) {
@@ -306,12 +306,82 @@ const emitter = new Emitter(5);
 
 /**
  * 异步迭代器可以耐心等待下一次迭代而不会导致计算成本，那么这也为实现可观察对象(Observable)接口提供了可能。
- * 总体上看，这涉及捕获事件，将他们封装在期约中，然后把这些事件提供给迭代器，而处理程序可以利用这些异步迭代器。
- * 在某个事件触发时，异步迭代器的下一个期约会解决为该事件。
+ * 总体上看，这涉及捕获事件，将他们封装在Promise中，然后把这些事件提供给迭代器，而处理程序可以利用这些异步迭代器。
+ * 在某个事件触发时，异步迭代器的下一个Promise会解决为该事件。
  * 
  * 注：可观察对象很大程度上是作为第三方库实现的。 可以了解下RxJs库
  */
 
-// 下面的例子 会捕捉浏览器事件的可观察流。这需要一个期约的队列，每个期约对应一个事件。该队列也会保持事件生成的顺序，对这种问题来说保持顺序也是合理的。
+// 下面的例子 会捕捉浏览器事件的可观察流。这需要一个Promise的队列，每个Promise对应一个事件。该队列也会保持事件生成的顺序，对这种问题来说保持顺序也是合理的。
+class Observable1 {
+    constructor() {
+        this.promiseQueue = [];
+
+        // 保存用于解决队列中下一个Promise的程序
+        this.resolve = null;
+
+        // 把最初的Promise推送到队列
+        // 该Promise会解决为第一个观察到的事件
+        this.enqueue();
+    }
+    enqueue() {
+        this.promiseQueue.push(
+            new Promise((resolve) => this.resolve = resolve)
+        );
+    }
+    // 从队列前端移除Promise 并返回它
+    dequeue() {
+        return this.promiseQueue.shift();
+    }
+}
+// 要利用这个Promise队列，可以在这个类上定义一个异步生成器方法，该生成器可以用于任何类型的事件：
+class Observable2 {
+    constructor() {
+        this.promiseQueue = [];
+
+        // 保存用于解决队列中下一个Promise的程序
+        this.resolve = null;
+
+        // 把最初的Promise推送到队列
+        // 该Promise会解决为第一个观察到的事件
+        this.enqueue();
+    }
+    enqueue() {
+        this.promiseQueue.push(
+            new Promise((resolve) => this.resolve = resolve)
+        );
+    }
+    // 从队列前端移除Promise 并返回它
+    dequeue() {
+        return this.promiseQueue.shift();
+    }
+
+    async *fromEvent (element, eventType) {
+        // 在有事件生成时，用事件对象来解决队列头部的Promise
+        // 同时把另一个Promise加入队列
+        element.addEventListener(eventType, (event) => {
+            this.resolve(event);
+            this.enqueue();
+        })
+        // 每次解决队列前面的Promise，都会向异步迭代器返回相应的事件对象
+        while (1) {
+            yield await this.dequeue();
+        }
+    }
+}
+
+// 在DOM元素上定义可观察对象。假设页面有一个<button>元素，可以像下面这样捕获按钮上的一系列click事件，然后在控制台中打印：
+(async function() {
+    const observable = new Observable2();
+    let buttonEl = document.createElement('button');
+    buttonEl.innerText = 'aaa';
+    document.body.appendChild(buttonEl);
+    const button = document.querySelector('button');
+    const mouseClickIterator = observable.fromEvent(button, 'click');
+
+    for await(const clickEvent of mouseClickIterator) {
+        console.log(clickEvent);
+    }
+})();
 
 })();
