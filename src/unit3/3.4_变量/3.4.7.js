@@ -534,11 +534,14 @@ console.log('+++', String(bar));
 /**
  * ？？？ 如果定义一个类继承 Array 然后重新定义这个类的 toPrimitive 
 class Carr extends Array {
-    constructor() {}
+    constructor() {
+        // 子类中没有constructor构造方法时，并且父类中的方法没有涉及到父类的constructor 子类时可以直接通过extends来继承父类身上的方法的
+        super();    // super() 方法必须写到子类中构造方法中的最前面，高于自身的this
+        this[Symbol.toPrimitive] = function(hint) {
+            return 3;
+        }
+    }
 }
- * 会报错
- * Must call super constructor in derived class before accessing 'this' or returning from derived constructor
-    at new Carr
  */
 });
 
