@@ -120,4 +120,4 @@ console.log(result);    // true
  */
 let myObject = undefined || {};
 console.log(myObject);      // {}
-})();
+});

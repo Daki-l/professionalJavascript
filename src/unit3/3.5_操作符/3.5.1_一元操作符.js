@@ -131,4 +131,4 @@ console.log(+new Map());    // NaN
 console.log(+new Set());    // NaN
 // console.log(+Symbol());    //  Cannot convert a Symbol value to a number
 console.log(+function () {});    // NaN
-})();
+});

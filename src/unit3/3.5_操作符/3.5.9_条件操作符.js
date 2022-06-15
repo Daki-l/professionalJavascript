@@ -1,3 +1,5 @@
+console.log('3.5.9 条件操作符');
+
 // 3.5.9 条件操作符
 /**
  * 条件操作符是ECMAScript中最广泛的操作符之一，语法和Java中一样：
@@ -10,4 +12,4 @@
     }
     console.log(compareVal(2, 3));  // 3
     console.log(compareVal(3, 2));  // 3
-})();
+});

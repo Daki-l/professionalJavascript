@@ -1,3 +1,5 @@
+console.log('3.5.8 相等操作符');
+
 // 3.5.8 相等操作符
 /**
  * 判断两个变量是否相等是编程中最重要的操作之一。在比较字符串、数值、布尔值是否相等时，过程很直观。但是在比较两个对象是否相等时，场景比较复杂。
@@ -66,4 +68,4 @@ console.log( '55' !== 55 );  // true
 
 console.log(null == undefined);     // true
 console.log(null === undefined);    // false
-})();
+});

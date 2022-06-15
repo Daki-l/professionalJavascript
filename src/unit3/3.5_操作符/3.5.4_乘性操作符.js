@@ -1,3 +1,4 @@
+console.log('3.5.4 乘性操作符');
 // 3.5.4 乘性操作符
 /**
  * ECMAScript定义了3个乘性操作符：乘法、除法和取模。
@@ -138,5 +139,5 @@ function monageList(list) {
 
 console.log(getAllMonthDay('2022-06'))
 
-})();
+});
 

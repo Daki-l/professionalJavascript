@@ -1,7 +1,9 @@
+console.log('3.5.6 加性操作符');
+
 // 3.5.6 加性操作符
 /**
  * 加性操作符，即加法和减法操作符，一般都是编程语言中最简单的操作符，在ECMAScript中，这两个操作符由一些特殊行为。
- * 加性操作符会在后台发送不同的数据转换。
+ * 加性操作符会在后台发生不同的数据转换。
  */
 
 (() => {
@@ -37,6 +39,7 @@ console.log(message);   // The sum of 5 and 10 is 510
 
 let message2 = 'The sum of 5 and 10 is ' + (num1 + num2);
 console.log(message2);   // The sum of 5 and 10 is 15
+
 });
 
 (() => {
@@ -56,7 +59,7 @@ console.log(message2);   // The sum of 5 and 10 is 15
  * 如果 +0 - -0，则返回 -0
  * 如果 -0 - -0，则返回 -0
  * 如果有任一操作数是字符串、布尔值、null、undefined，则在后台使用 Number() 将其转换为数值，然后再根据前面的规则执行数学运算。
- * 如果有任一操作数是对象，则调用其valueOf() 方法取得表示它的数值。如果对象没雨valueOf()方法，则调用其toString()方法，然后再将得到的字符串转换为数值。
+ * 如果有任一操作数是对象，则调用其valueOf() 方法取得表示它的数值。如果对象没有valueOf()方法，则调用其toString()方法，然后再将得到的字符串转换为数值。
  */
 console.log( 5 - true );    // 4
 console.log( NaN - 1 );    // NaN
@@ -64,4 +67,4 @@ console.log( 5 - 3 );    // 2
 console.log( 5 - '' );    // 5
 console.log( 5 - '2' );    // 3
 console.log( 5 - null );    // 5
-})();
+});

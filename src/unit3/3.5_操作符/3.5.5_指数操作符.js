@@ -1,3 +1,5 @@
+console.log('3.5.5 指数操作符');
+
 // 3.5.5 指数操作符
 /**
  * 使用 Math.pow(x, y) 对x数值进行指数y求值，在ECMAScript7 中新增了指数操作符(**)
@@ -18,4 +20,4 @@ console.log(squared);   // 9
 let squar = 16;
 squar **= 0.5;
 console.log(squar);   // 4
-})();
+});
