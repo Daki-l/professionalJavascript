@@ -8,3 +8,4 @@ import './3.6.7_标签语句.js';
 import './3.6.8_break和continue语句.js';
 import './3.6.9_with语句.js';
 import './3.6.10_swith语句.js';
+import './3.6.11_函数.js';
