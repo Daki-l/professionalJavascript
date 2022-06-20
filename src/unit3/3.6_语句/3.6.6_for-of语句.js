@@ -20,4 +20,4 @@ for (const e of [2, 4, 6, 8]) {
 
 // for-await-of 是ES2018对for-of的语句扩展，以支持生成 promise 的异步可迭代对象
 
-})();
+});
