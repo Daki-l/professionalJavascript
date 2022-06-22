@@ -61,4 +61,35 @@
     label: statement
  */
     
+
+/**
+ * 3.6.8
+ * break 和 continue 语句，用于打破循环 和跳过此次循环
+ *  break. continyue
+ */
+
+/**
+ * 3.6.9 with 将代码作用域设置为特定的对象 语句：
+    with(expression) {
+        statement
+    }
+ * 注： 语句影响性能且难于调试其中的代码，通常不推荐使在产品代码中使用with代码，并且再严格模式报错
+ */
+
+
+/**
+ * 3.6.10 switch if 语句紧密相关的一种流控制语句, 可以替换多个if() {} else if () {} 的情况 语句：
+    switch(expression) {
+        case value1:
+            statement
+            break;
+        case value2:
+            statement
+            break;
+        detault:
+            statement
+    }
+ * expression、value 可以是数值也可以时表达式
+ * 注：break不加的话 会造成 case穿透
+ */
 })();
